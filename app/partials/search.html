@@ -1,0 +1,16 @@
+<form ng-submit="submit()" ng-controller="FloripaRoutesCtrl">
+
+    <div class="well">
+        <input type="text" ng-model="streetName" placeholder="Enter a street name" class="search-query">
+        <input type="submit" id="submit" value="Search" class="btn-primary" />
+    </div>
+
+    <div ng-show="routes">
+        <h3 class="title">Routes for {{streetNameSubmit}}:</h3>
+
+        <div ng-repeat="route in routes.rows | orderBy:'shortName'">
+            <a ng-click="getDetails(route)" id=route.id>{{route.shortName}} - {{route.longName}}</a>
+        </div>
+    </div>
+
+</form>

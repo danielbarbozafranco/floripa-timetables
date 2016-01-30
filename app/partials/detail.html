@@ -1,0 +1,58 @@
+<div class='well'>
+    <input type="button" ng-click="goBack()" value="<Back" class="btn-primary" /> {{routeName}}
+</div>
+
+<uib-tabset>
+    <uib-tab heading="Stops" class='rightBorder'>
+        <div ng-repeat="stop in stops.rows | orderBy:'sequence'" class='tag'>
+            <div ng-class-odd="'street odd'" ng-class-even="'street even'">
+                {{$index+1}} - {{stop.name}}
+            </div>
+        </div>
+    </uib-tab>
+
+    <uib-tab heading="Week">
+        <div class="centerAll">
+            <span ng-repeat="departure in filtered = (departures.rows | filter:{calendar:'WEEKDAY'} | orderBy:'time')" class='tagBus'>
+                <span ng-class-even="'bus evenBus'" ng-class-odd="'bus oddBus'">
+                    {{departure.time}}
+                </span>
+            </span>
+        </div>
+
+        <span ng-hide="filtered.length">
+            There are no lines.
+        </span>
+    </uib-tab>
+
+    <uib-tab heading="Sat">
+        <div class="centerAll">
+
+            <span ng-repeat="departure in filtered = (departures.rows | filter:{calendar:'SATURDAY'} | orderBy:'time')" class='tagBus'>
+            <span ng-class-odd="'bus oddBus'" ng-class-even="'bus evenBus'">
+                {{departure.time}}
+            </span>
+            </span>
+        </div>
+
+        <span ng-hide="filtered.length">
+            There are no lines.
+        </span>
+    </uib-tab>
+
+    <uib-tab heading="Sun">
+        <div class="centerAll">
+
+            <span ng-repeat="departure in filtered = (departures.rows | filter:{calendar:'SUNDAY'} | orderBy:'time')" class='tagBus'>
+            <span  ng-class-odd="'bus oddBus'" ng-class-even="'bus evenBus'">
+                {{departure.time}}
+            </span>
+            </span>
+        </div>
+
+        <span ng-hide="filtered.length">
+            There are no lines.
+        </span>
+    </uib-tab>
+
+</uib-tabset>
