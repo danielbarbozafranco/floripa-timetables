@@ -11,7 +11,7 @@ Then on a terminal or node shell (windows) type:
 * npm install http-server -g
 * http-server
 
-
+Just run the app on a browser, using "ip_address:8080/". You can see the ip address shown in the console when http-server started. In order to run in a mobile phone the wifi should be the same network as the webserver.
 
 
 Improvements:
