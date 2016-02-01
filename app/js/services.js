@@ -1,4 +1,4 @@
-floripaApp.factory('searchHistory', function () {
+floripaApp.factory('searchService', function () {
     return {};
 });
 

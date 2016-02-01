@@ -1,16 +1,20 @@
 <form ng-submit="submit()" ng-controller="FloripaRoutesCtrl">
-
     <div class="well">
         <input type="text" ng-model="streetName" placeholder="Enter a street name" class="search-query">
         <input type="submit" id="submit" value="Search" class="btn-primary" />
+        <input type="button" ng-click="openMap()" value="Map" class="btn-primary" />
     </div>
 
-    <div ng-show="routes">
+    <div ng-show="searchService.routes.rows.length">
         <h3 class="title">Routes for {{streetNameSubmit}}:</h3>
 
-        <div ng-repeat="route in routes.rows | orderBy:'shortName'">
+        <div ng-repeat="route in searchService.routes.rows | orderBy:'shortName'">
             <a ng-click="getDetails(route)" id=route.id>{{route.shortName}} - {{route.longName}}</a>
         </div>
     </div>
+    <div ng-show="searchService.routes.rows.length == 0">
+        <h4>There are no routes for {{streetNameSubmit}}.</h4>
+    </div>
+
 
 </form>

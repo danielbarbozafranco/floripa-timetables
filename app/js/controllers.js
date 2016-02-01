@@ -1,8 +1,79 @@
-floripaApp.controller('SearchCtrl', ['$scope', 'searchHistory', '$location', function ($scope, searchHistory, $location) {
+floripaApp.controller("GMapController", ['$scope', 'uiGmapGoogleMapApi', '$location', 'searchService', function ($scope, uiGmapGoogleMapApi, $location, searchService) {
+
+    $scope.goBack = function () {
+        $location.url('/');
+    };
+
+    $scope.search = function () {
+        searchService.streetName = $scope.streetName;
+        searchService.doSearch = true;
+        $location.url('/');
+    };
+
+    uiGmapGoogleMapApi.then(function (maps) {
+
+    });
+
+    $scope.putMarker = function (mapModel, location) {
+        if (!$scope.marker) {
+            $scope.marker = new google.maps.Marker({
+                position: location,
+                map: mapModel
+            });
+        } else {
+            $scope.marker.setPosition(location);
+        }
+    }
+
+    $scope.map = {
+        // should use the one from the device, just a mock
+        center: {
+            latitude: -27.5964796,
+            longitude: -48.5205031
+        },
+        events: {
+            click: function (mapModel, eventName, originalEventArgs) {
+                var e = originalEventArgs[0];
+                $scope.geocode(e.latLng);
+                $scope.putMarker(mapModel, e.latLng);
+            },
+        },
+        zoom: 17
+    };
+
+    var geocoder = new google.maps.Geocoder();
+
+    $scope.geocode = function (latlng) {
+        geocoder.geocode({
+            'latLng': latlng
+        }, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                if (results[1]) {
+                    $scope.streetName = results[0].address_components[1].long_name;
+                    $scope.$evalAsync();
+                } else {
+                    console.log('Location not found');
+                }
+            } else {
+                console.log('Geocoder failed due to: ' + status);
+            }
+        });
+    }
+
+}]);
+
+
+floripaApp.controller('SearchCtrl', ['$scope', 'searchService', '$location', function ($scope, searchService, $location) {
+
+    $scope.searchService = searchService;
+
+    $scope.openMap = function () {
+        searchService.streetName = this.streetName;
+        $location.url('/map/');
+    };
 
     $scope.getDetails = function (route) {
-        searchHistory.streetName = this.streetName;
-        searchHistory.routes = this.routes;
+        searchService.streetName = this.streetName;
 
         var url = '/detail/' + route.id + '/' +
             route.shortName + '/' + route.longName;
@@ -10,15 +81,14 @@ floripaApp.controller('SearchCtrl', ['$scope', 'searchHistory', '$location', fun
         $location.url(url);
     }
 
-    if (searchHistory.streetName) {
-        $scope.routes = searchHistory.routes;
-        $scope.streetName = searchHistory.streetName;
-        $scope.streetNameSubmit = searchHistory.streetName;
+    if (searchService.streetName) {
+        $scope.streetName = searchService.streetName;
+        $scope.streetNameSubmit = searchService.streetName;
     }
 
 }]);
 
-floripaApp.controller('FloripaRoutesCtrl', ['$scope', 'FindRoutesByStopName', 'searchHistory', function ($scope, FindRoutesByStopName, searchHistory) {
+floripaApp.controller('FloripaRoutesCtrl', ['$scope', 'FindRoutesByStopName', 'searchService', function ($scope, FindRoutesByStopName, searchService) {
 
     $scope.submit = function () {
 
@@ -28,13 +98,18 @@ floripaApp.controller('FloripaRoutesCtrl', ['$scope', 'FindRoutesByStopName', 's
             }
         };
 
-        $scope.routes = FindRoutesByStopName.save({}, payload);
+        searchService.routes = FindRoutesByStopName.save({}, payload);
 
         if ($scope.streetName) {
             $scope.streetNameSubmit = $scope.streetName;
         }
 
     };
+
+    if (searchService.doSearch) {
+        $scope.submit();
+        searchService.doSearch = false;
+    }
 
 }]);
 

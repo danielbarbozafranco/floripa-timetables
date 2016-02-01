@@ -1,0 +1,7 @@
+<div class="well">
+    <input type="button" ng-click="goBack()" value="<Back" class="btn-primary" />&nbsp;{{streetName}}
+    <input type="button" ng-show="streetName" ng-click="search()" value="OK" class="btn-primary" />
+</div>
+
+<ui-gmap-google-map center='map.center' zoom='map.zoom' events="map.events">
+</ui-gmap-google-map>
