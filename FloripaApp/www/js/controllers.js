@@ -10,10 +10,6 @@ floripaApp.controller("GMapController", ['$scope', 'uiGmapGoogleMapApi', '$locat
         $location.url('/');
     };
 
-    uiGmapGoogleMapApi.then(function (maps) {
-
-    });
-
     $scope.putMarker = function (mapModel, location) {
         if (!$scope.marker) {
             $scope.marker = new google.maps.Marker({
@@ -26,7 +22,7 @@ floripaApp.controller("GMapController", ['$scope', 'uiGmapGoogleMapApi', '$locat
     }
 
     $scope.map = {
-        // should use the one from the device, just a mock
+        // should use the one from the device, just a mock for: Trindade, Florianopolis-SC
         center: {
             latitude: -27.5964796,
             longitude: -48.5205031
